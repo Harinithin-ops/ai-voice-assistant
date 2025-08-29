@@ -78,7 +78,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
       recognitionRef.current.lang = "en-US"
       recognitionRef.current.maxAlternatives = 1
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         let finalTranscript = ""
         let interimTranscript = ""
 
@@ -101,7 +101,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
         }
       }
 
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error("Speech recognition error:", event.error)
         setIsListening(false)
         setIsProcessing(false)
@@ -118,7 +118,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
       answerRecognitionRef.current.lang = "en-US"
       answerRecognitionRef.current.maxAlternatives = 1
 
-      answerRecognitionRef.current.onresult = (event) => {
+      answerRecognitionRef.current.onresult = (event: any) => {
         let finalTranscript = ""
         let interimTranscript = ""
 
@@ -175,7 +175,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
         }
       }
 
-      answerRecognitionRef.current.onerror = (event) => {
+      answerRecognitionRef.current.onerror = (event: any) => {
         if (event.error === "no-speech") {
           return
         }
@@ -201,7 +201,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
               try {
                 answerRecognitionRef.current.start()
               } catch (error) {
-                if (error.message && !error.message.includes("already started")) {
+                if ((error as any).message && !(error as any).message.includes("already started")) {
                   console.log("Recognition restart failed, will retry:", error)
                   restartTimeoutRef.current = setTimeout(() => {
                     if (
