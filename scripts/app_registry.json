@@ -1,0 +1,434 @@
+{
+  "aliases": {
+    "google": {"type": "website", "url": "https://www.google.com"},
+    "gmail": {"type": "website", "url": "https://mail.google.com"},
+    "drive": {"type": "website", "url": "https://drive.google.com"},
+    "calendar": {"type": "website", "url": "https://calendar.google.com"},
+    "meet": {"type": "website", "url": "https://meet.google.com"},
+    "maps": {"type": "website", "url": "https://maps.google.com"},
+    "photos": {"type": "website", "url": "https://photos.google.com"},
+    "youtube": {"type": "website", "url": "https://www.youtube.com"},
+    "youtube music": {"type": "website", "url": "https://music.youtube.com"},
+    "facebook": {"type": "website", "url": "https://www.facebook.com"},
+    "messenger": {"type": "website", "url": "https://www.messenger.com"},
+    "instagram": {"type": "website", "url": "https://www.instagram.com"},
+    "threads": {"type": "website", "url": "https://www.threads.net"},
+    "twitter": {"type": "website", "url": "https://twitter.com"},
+    "x": {"type": "website", "url": "https://twitter.com"},
+    "linkedin": {"type": "website", "url": "https://www.linkedin.com"},
+    "pinterest": {"type": "website", "url": "https://www.pinterest.com"},
+    "reddit": {"type": "website", "url": "https://www.reddit.com"},
+    "tiktok": {"type": "website", "url": "https://www.tiktok.com"},
+    "snapchat": {"type": "website", "url": "https://web.snapchat.com"},
+
+    "whatsapp web": {"type": "website", "url": "https://web.whatsapp.com"},
+    "whatsapp": {"type": "app", "protocol": "whatsapp://", "windows": "WhatsApp.exe"},
+    "telegram": {"type": "app", "protocol": "tg://", "windows": "Telegram.exe"},
+    "discord": {"type": "app", "protocol": "discord://", "windows": "Discord.exe"},
+    "slack": {"type": "app", "protocol": "slack://", "windows": "slack.exe"},
+    "zoom": {"type": "app", "protocol": "zoommtg://", "windows": "Zoom.exe"},
+    "teams": {"type": "app", "windows": "Teams.exe"},
+    "skype": {"type": "app", "windows": "Skype.exe"},
+    "signal": {"type": "app", "windows": "Signal.exe"},
+
+    "spotify": {"type": "app", "protocol": "spotify://", "windows": "Spotify.exe"},
+    "apple music": {"type": "website", "url": "https://music.apple.com"},
+    "soundcloud": {"type": "website", "url": "https://soundcloud.com"},
+    "deezer": {"type": "website", "url": "https://www.deezer.com"},
+    "gaana": {"type": "website", "url": "https://gaana.com"},
+    "wynk": {"type": "website", "url": "https://wynk.in/music"},
+    "jiosaavn": {"type": "website", "url": "https://www.jiosaavn.com"},
+
+    "netflix": {"type": "website", "url": "https://www.netflix.com"},
+    "prime video": {"type": "website", "url": "https://www.primevideo.com"},
+    "disney+": {"type": "website", "url": "https://www.disneyplus.com"},
+    "hotstar": {"type": "website", "url": "https://www.hotstar.com"},
+    "hulu": {"type": "website", "url": "https://www.hulu.com"},
+    "max": {"type": "website", "url": "https://www.max.com"},
+    "zee5": {"type": "website", "url": "https://www.zee5.com"},
+    "sonyliv": {"type": "website", "url": "https://www.sonyliv.com"},
+    "altbalaji": {"type": "website", "url": "https://www.altbalaji.com"},
+    "youtube tv": {"type": "website", "url": "https://tv.youtube.com"},
+
+    "amazon": {"type": "website", "url": "https://www.amazon.in"},
+    "flipkart": {"type": "website", "url": "https://www.flipkart.com"},
+    "myntra": {"type": "website", "url": "https://www.myntra.com"},
+    "ajio": {"type": "website", "url": "https://www.ajio.com"},
+    "snapdeal": {"type": "website", "url": "https://www.snapdeal.com"},
+    "ebay": {"type": "website", "url": "https://www.ebay.com"},
+    "walmart": {"type": "website", "url": "https://www.walmart.com"},
+    "best buy": {"type": "website", "url": "https://www.bestbuy.com"},
+    "aliexpress": {"type": "website", "url": "https://www.aliexpress.com"},
+    "etsy": {"type": "website", "url": "https://www.etsy.com"},
+    "meesho": {"type": "website", "url": "https://www.meesho.com"},
+
+    "zomato": {"type": "website", "url": "https://www.zomato.com"},
+    "swiggy": {"type": "website", "url": "https://www.swiggy.com"},
+    "ubereats": {"type": "website", "url": "https://www.ubereats.com"},
+    "doordash": {"type": "website", "url": "https://www.doordash.com"},
+    "grubhub": {"type": "website", "url": "https://www.grubhub.com"},
+
+    "cricbuzz": {"type": "website", "url": "https://www.cricbuzz.com"},
+    "espn": {"type": "website", "url": "https://www.espn.com"},
+    "sofascore": {"type": "website", "url": "https://www.sofascore.com"},
+    "onefootball": {"type": "website", "url": "https://onefootball.com"},
+    "fifa": {"type": "website", "url": "https://www.fifa.com"},
+
+    "stackoverflow": {"type": "website", "url": "https://stackoverflow.com"},
+    "github": {"type": "website", "url": "https://github.com"},
+    "gitlab": {"type": "website", "url": "https://gitlab.com"},
+    "bitbucket": {"type": "website", "url": "https://bitbucket.org"},
+    "npm": {"type": "website", "url": "https://www.npmjs.com"},
+    "pypi": {"type": "website", "url": "https://pypi.org"},
+    "docker hub": {"type": "website", "url": "https://hub.docker.com"},
+    "kaggle": {"type": "website", "url": "https://www.kaggle.com"},
+    "colab": {"type": "website", "url": "https://colab.research.google.com"},
+    "huggingface": {"type": "website", "url": "https://huggingface.co"},
+    "openai": {"type": "website", "url": "https://platform.openai.com"},
+    "anthropic": {"type": "website", "url": "https://console.anthropic.com"},
+    "replicate": {"type": "website", "url": "https://replicate.com"},
+
+    "news": {"type": "website", "url": "https://news.google.com"},
+    "bbc": {"type": "website", "url": "https://www.bbc.com"},
+    "cnn": {"type": "website", "url": "https://www.cnn.com"},
+    "ndtv": {"type": "website", "url": "https://www.ndtv.com"},
+    "times of india": {"type": "website", "url": "https://timesofindia.indiatimes.com"},
+    "hindustan times": {"type": "website", "url": "https://www.hindustantimes.com"},
+    "the hindu": {"type": "website", "url": "https://www.thehindu.com"},
+    "indian express": {"type": "website", "url": "https://indianexpress.com"},
+    "guardian": {"type": "website", "url": "https://www.theguardian.com"},
+    "nyt": {"type": "website", "url": "https://www.nytimes.com"},
+    "wsj": {"type": "website", "url": "https://www.wsj.com"},
+
+    "weather": {"type": "website", "url": "https://weather.com"},
+    "accuweather": {"type": "website", "url": "https://www.accuweather.com"},
+    "windy": {"type": "website", "url": "https://www.windy.com"},
+
+    "drive pdf": {"type": "website", "url": "https://drive.google.com/drive/u/0/my-drive"},
+    "dropbox": {"type": "website", "url": "https://www.dropbox.com"},
+    "onedrive": {"type": "website", "url": "https://onedrive.live.com"},
+    "box": {"type": "website", "url": "https://www.box.com"},
+
+    "office": {"type": "website", "url": "https://www.office.com"},
+    "word": {"type": "app", "protocol": "ms-word:", "windows": "WINWORD.EXE"},
+    "excel": {"type": "app", "protocol": "ms-excel:", "windows": "EXCEL.EXE"},
+    "powerpoint": {"type": "app", "protocol": "ms-powerpoint:", "windows": "POWERPNT.EXE"},
+    "outlook": {"type": "app", "protocol": "outlook://", "windows": "OUTLOOK.EXE"},
+    "onenote": {"type": "website", "url": "https://www.onenote.com"},
+
+    "chrome": {"type": "app", "windows": "chrome.exe"},
+    "edge": {"type": "app", "windows": "msedge.exe"},
+    "firefox": {"type": "app", "windows": "firefox.exe"},
+    "brave": {"type": "app", "windows": "brave.exe"},
+    "opera": {"type": "app", "windows": "opera.exe"},
+
+    "vscode": {"type": "app", "protocol": "vscode://", "windows": "Code.exe"},
+    "visual studio code": {"type": "app", "protocol": "vscode://", "windows": "Code.exe"},
+    "postman": {"type": "app", "windows": "Postman.exe"},
+    "pycharm": {"type": "app", "windows": "pycharm64.exe"},
+    "intellij": {"type": "app", "windows": "idea64.exe"},
+    "webstorm": {"type": "app", "windows": "webstorm64.exe"},
+    "android studio": {"type": "app", "windows": "studio64.exe"},
+    "docker desktop": {"type": "app", "windows": "Docker Desktop.exe"},
+    "git": {"type": "website", "url": "https://git-scm.com"},
+
+    "notion": {"type": "app", "protocol": "notion://", "windows": "Notion.exe"},
+    "evernote": {"type": "website", "url": "https://www.evernote.com"},
+    "todoist": {"type": "website", "url": "https://todoist.com"},
+    "trello": {"type": "website", "url": "https://trello.com"},
+    "asana": {"type": "website", "url": "https://app.asana.com"},
+    "clickup": {"type": "website", "url": "https://app.clickup.com"},
+    "linear": {"type": "website", "url": "https://linear.app"},
+    "jira": {"type": "website", "url": "https://www.atlassian.com/software/jira"},
+    "confluence": {"type": "website", "url": "https://www.atlassian.com/software/confluence"},
+
+    "udemy": {"type": "website", "url": "https://www.udemy.com"},
+    "coursera": {"type": "website", "url": "https://www.coursera.org"},
+    "edx": {"type": "website", "url": "https://www.edx.org"},
+    "khan academy": {"type": "website", "url": "https://www.khanacademy.org"},
+    "udacity": {"type": "website", "url": "https://www.udacity.com"},
+    "geeksforgeeks": {"type": "website", "url": "https://www.geeksforgeeks.org"},
+    "w3schools": {"type": "website", "url": "https://www.w3schools.com"},
+    "freecodecamp": {"type": "website", "url": "https://www.freecodecamp.org"},
+    "leetcode": {"type": "website", "url": "https://leetcode.com"},
+    "hackerrank": {"type": "website", "url": "https://www.hackerrank.com"},
+    "codeforces": {"type": "website", "url": "https://codeforces.com"},
+    "codechef": {"type": "website", "url": "https://www.codechef.com"},
+
+    "bank of india": {"type": "website", "url": "https://bankofindia.co.in"},
+    "sbi": {"type": "website", "url": "https://www.onlinesbi.sbi"},
+    "hdfc": {"type": "website", "url": "https://www.hdfcbank.com"},
+    "icici": {"type": "website", "url": "https://www.icicibank.com"},
+    "axis": {"type": "website", "url": "https://www.axisbank.com"},
+    "paytm": {"type": "website", "url": "https://paytm.com"},
+    "phonepe": {"type": "website", "url": "https://www.phonepe.com"},
+    "gpay": {"type": "website", "url": "https://pay.google.com"},
+
+    "microsoft": {"type": "website", "url": "https://www.microsoft.com"},
+    "apple": {"type": "website", "url": "https://www.apple.com"},
+    "samsung": {"type": "website", "url": "https://www.samsung.com"},
+    "dell": {"type": "website", "url": "https://www.dell.com"},
+    "hp": {"type": "website", "url": "https://www.hp.com"},
+    "lenovo": {"type": "website", "url": "https://www.lenovo.com"},
+
+    "wiki": {"type": "website", "url": "https://en.wikipedia.org"},
+    "medium": {"type": "website", "url": "https://medium.com"},
+    "dev.to": {"type": "website", "url": "https://dev.to"},
+    "hashnode": {"type": "website", "url": "https://hashnode.com"},
+
+    "canva": {"type": "website", "url": "https://www.canva.com"},
+    "figma": {"type": "website", "url": "https://www.figma.com"},
+    "adobe": {"type": "website", "url": "https://www.adobe.com"},
+    "photoshop": {"type": "website", "url": "https://www.adobe.com/products/photoshop.html"},
+    "illustrator": {"type": "website", "url": "https://www.adobe.com/products/illustrator.html"},
+    "premiere": {"type": "website", "url": "https://www.adobe.com/products/premiere.html"},
+
+    "weather india": {"type": "website", "url": "https://mausam.imd.gov.in"},
+    "irctc": {"type": "website", "url": "https://www.irctc.co.in"},
+    "makemytrip": {"type": "website", "url": "https://www.makemytrip.com"},
+    "yatra": {"type": "website", "url": "https://www.yatra.com"},
+    "air india": {"type": "website", "url": "https://www.airindia.com"},
+    "indigo": {"type": "website", "url": "https://www.goindigo.in"},
+
+    "olx": {"type": "website", "url": "https://www.olx.in"},
+    "quora": {"type": "website", "url": "https://www.quora.com"},
+    "reddit india": {"type": "website", "url": "https://www.reddit.com/r/india"},
+
+    "government india": {"type": "website", "url": "https://www.india.gov.in"},
+    "uidai": {"type": "website", "url": "https://uidai.gov.in"},
+    "income tax": {"type": "website", "url": "https://www.incometax.gov.in"},
+    "mparivahan": {"type": "website", "url": "https://parivahan.gov.in"},
+
+    "weather forecast": {"type": "website", "url": "https://www.metoffice.gov.uk"},
+    "translate": {"type": "website", "url": "https://translate.google.com"},
+    "docs": {"type": "website", "url": "https://docs.google.com"},
+    "sheets": {"type": "website", "url": "https://sheets.google.com"},
+    "slides": {"type": "website", "url": "https://slides.google.com"},
+
+    "calculator": {"type": "app", "windows": "calc.exe"},
+    "notepad": {"type": "app", "windows": "notepad.exe"},
+    "cmd": {"type": "app", "windows": "cmd.exe"},
+    "powershell": {"type": "app", "windows": "powershell.exe"},
+    "explorer": {"type": "app", "windows": "explorer.exe"},
+    "paint": {"type": "app", "windows": "mspaint.exe"},
+    "wordpad": {"type": "app", "windows": "wordpad.exe"},
+
+    "vlc": {"type": "app", "windows": "vlc.exe"},
+    "kmplayer": {"type": "website", "url": "https://www.kmplayer.com"},
+    "gom player": {"type": "website", "url": "https://www.gomlab.com"},
+
+    "udacity nanodegree": {"type": "website", "url": "https://classroom.udacity.com"},
+    "stackoverflow jobs": {"type": "website", "url": "https://stackoverflow.com/jobs"},
+    "indeed": {"type": "website", "url": "https://www.indeed.com"},
+    "naukri": {"type": "website", "url": "https://www.naukri.com"},
+    "linkedin jobs": {"type": "website", "url": "https://www.linkedin.com/jobs"},
+
+    "weather radar": {"type": "website", "url": "https://www.rainviewer.com"},
+    "earth": {"type": "website", "url": "https://earth.google.com"},
+
+    "azure": {"type": "website", "url": "https://portal.azure.com"},
+    "aws": {"type": "website", "url": "https://console.aws.amazon.com"},
+    "gcp": {"type": "website", "url": "https://console.cloud.google.com"},
+    "vercel": {"type": "website", "url": "https://vercel.com"},
+    "netlify": {"type": "website", "url": "https://app.netlify.com"},
+    "render": {"type": "website", "url": "https://dashboard.render.com"},
+
+    "jira cloud": {"type": "website", "url": "https://id.atlassian.com/login"},
+    "confluence cloud": {"type": "website", "url": "https://www.atlassian.com/software/confluence"},
+
+    "medium profile": {"type": "website", "url": "https://medium.com/me"},
+    "github profile": {"type": "website", "url": "https://github.com/settings/profile"},
+
+    "calculator online": {"type": "website", "url": "https://www.desmos.com/scientific"},
+
+    "openai chat": {"type": "website", "url": "https://chat.openai.com"},
+    "claude": {"type": "website", "url": "https://claude.ai"},
+    "perplexity": {"type": "website", "url": "https://www.perplexity.ai"},
+
+    "news18": {"type": "website", "url": "https://www.news18.com"},
+    "moneycontrol": {"type": "website", "url": "https://www.moneycontrol.com"},
+    "bloomberg": {"type": "website", "url": "https://www.bloomberg.com"},
+    "reuters": {"type": "website", "url": "https://www.reuters.com"},
+    "techcrunch": {"type": "website", "url": "https://techcrunch.com"},
+    "wired": {"type": "website", "url": "https://www.wired.com"},
+    "verge": {"type": "website", "url": "https://www.theverge.com"},
+    "gizmodo": {"type": "website", "url": "https://gizmodo.com"},
+
+    "stackoverflow india": {"type": "website", "url": "https://stackoverflow.com/tags/india"},
+
+    "bing": {"type": "website", "url": "https://www.bing.com"},
+    "duckduckgo": {"type": "website", "url": "https://duckduckgo.com"},
+    "yahoo": {"type": "website", "url": "https://www.yahoo.com"},
+
+    "pandora": {"type": "website", "url": "https://www.pandora.com"},
+    "bandcamp": {"type": "website", "url": "https://bandcamp.com"},
+
+    "courier tracking": {"type": "website", "url": "https://www.aftership.com/track"},
+
+    "stackoverflow company": {"type": "website", "url": "https://stackoverflow.co"},
+
+    "unsplash": {"type": "website", "url": "https://unsplash.com"},
+    "pexels": {"type": "website", "url": "https://www.pexels.com"},
+    "pixabay": {"type": "website", "url": "https://pixabay.com"},
+
+    "translate deepl": {"type": "website", "url": "https://www.deepl.com/translator"},
+
+    "coursera profile": {"type": "website", "url": "https://www.coursera.org/?authMode=login"},
+
+    "stackexchange": {"type": "website", "url": "https://stackexchange.com"},
+
+    "salesforce": {"type": "website", "url": "https://login.salesforce.com"},
+    "sap": {"type": "website", "url": "https://www.sap.com"},
+
+    "jpmorgan": {"type": "website", "url": "https://www.jpmorganchase.com"},
+    "goldman sachs": {"type": "website", "url": "https://www.goldmansachs.com"},
+
+    "huggingface models": {"type": "website", "url": "https://huggingface.co/models"},
+    "replicate explore": {"type": "website", "url": "https://replicate.com/explore"},
+
+    "stackoverflow questions": {"type": "website", "url": "https://stackoverflow.com/questions"},
+
+    "openai status": {"type": "website", "url": "https://status.openai.com"},
+    "github status": {"type": "website", "url": "https://www.githubstatus.com"},
+
+    "udemy teach": {"type": "website", "url": "https://www.udemy.com/teaching"},
+
+    "microsoft learn": {"type": "website", "url": "https://learn.microsoft.com"},
+    "aws docs": {"type": "website", "url": "https://docs.aws.amazon.com"},
+    "gcp docs": {"type": "website", "url": "https://cloud.google.com/docs"},
+
+    "ngrok": {"type": "website", "url": "https://dashboard.ngrok.com"},
+    "postman web": {"type": "website", "url": "https://web.postman.co"},
+
+    "jira login": {"type": "website", "url": "https://id.atlassian.com/login"},
+
+    "medium tech": {"type": "website", "url": "https://medium.com/topic/technology"},
+
+    "discord developers": {"type": "website", "url": "https://discord.com/developers"},
+    "slack api": {"type": "website", "url": "https://api.slack.com"},
+
+    "microsoft teams": {"type": "app", "windows": "Teams.exe"},
+    "visual studio": {"type": "app", "windows": "devenv.exe"},
+    "unity": {"type": "app", "windows": "Unity.exe"},
+    "unreal": {"type": "app", "windows": "UE4Editor.exe"},
+    "steam": {"type": "app", "windows": "steam.exe"},
+
+    "epic games": {"type": "app", "windows": "EpicGamesLauncher.exe"},
+    "battle.net": {"type": "app", "windows": "Battle.net.exe"},
+    "origin": {"type": "app", "windows": "Origin.exe"},
+    "gog": {"type": "app", "windows": "GalaxyClient.exe"},
+
+    "audacity": {"type": "app", "windows": "audacity.exe"},
+    "obs": {"type": "app", "windows": "obs64.exe"},
+
+    "7zip": {"type": "app", "windows": "7zFM.exe"},
+    "winrar": {"type": "app", "windows": "WinRAR.exe"},
+
+    "putty": {"type": "app", "windows": "putty.exe"},
+    "mobaxterm": {"type": "app", "windows": "MobaXterm.exe"},
+
+    "filezilla": {"type": "app", "windows": "filezilla.exe"},
+
+    "calc": {"type": "app", "windows": "calc.exe"},
+    "text edit": {"type": "website", "url": "https://editpad.org"},
+
+    "stackoverflow users": {"type": "website", "url": "https://stackoverflow.com/users"},
+    "npm status": {"type": "website", "url": "https://status.npmjs.org"},
+    "vercel status": {"type": "website", "url": "https://www.vercel-status.com"},
+
+    "stripe": {"type": "website", "url": "https://dashboard.stripe.com"},
+    "razorpay": {"type": "website", "url": "https://dashboard.razorpay.com"},
+
+    "google flights": {"type": "website", "url": "https://www.google.com/travel/flights"},
+    "google hotels": {"type": "website", "url": "https://www.google.com/travel/hotels"},
+
+    "jira board": {"type": "website", "url": "https://www.atlassian.com/software/jira"},
+
+    "dribbble": {"type": "website", "url": "https://dribbble.com"},
+    "behance": {"type": "website", "url": "https://www.behance.net"},
+
+    "typeform": {"type": "website", "url": "https://www.typeform.com"},
+    "airtable": {"type": "website", "url": "https://airtable.com"},
+    "zapier": {"type": "website", "url": "https://zapier.com"},
+    "ifttt": {"type": "website", "url": "https://ifttt.com"},
+
+    "supabase": {"type": "website", "url": "https://supabase.com"},
+    "firebase": {"type": "website", "url": "https://console.firebase.google.com"},
+    "mongodb atlas": {"type": "website", "url": "https://cloud.mongodb.com"},
+    "planetscale": {"type": "website", "url": "https://app.planetscale.com"},
+
+    "new york times": {"type": "website", "url": "https://www.nytimes.com"},
+    "washington post": {"type": "website", "url": "https://www.washingtonpost.com"},
+
+    "craigslist": {"type": "website", "url": "https://www.craigslist.org"},
+    "gumtree": {"type": "website", "url": "https://www.gumtree.com"},
+
+    "coursera data": {"type": "website", "url": "https://www.coursera.org/browse/data-science"},
+
+    "stackoverflow tags": {"type": "website", "url": "https://stackoverflow.com/tags"},
+
+    "github trending": {"type": "website", "url": "https://github.com/trending"},
+    "github issues": {"type": "website", "url": "https://github.com/issues"},
+    "github prs": {"type": "website", "url": "https://github.com/pulls"},
+
+    "youtube subscriptions": {"type": "website", "url": "https://www.youtube.com/feed/subscriptions"},
+    "youtube history": {"type": "website", "url": "https://www.youtube.com/feed/history"},
+
+    "calendar india": {"type": "website", "url": "https://www.calendarlabs.com/holidays/india/"},
+
+    "open source jobs": {"type": "website", "url": "https://opensourcejobs.dev"},
+
+    "rbi": {"type": "website", "url": "https://www.rbi.org.in"},
+    "sebi": {"type": "website", "url": "https://www.sebi.gov.in"},
+
+    "bse": {"type": "website", "url": "https://www.bseindia.com"},
+    "nse": {"type": "website", "url": "https://www.nseindia.com"},
+
+    "coinmarketcap": {"type": "website", "url": "https://coinmarketcap.com"},
+    "coingecko": {"type": "website", "url": "https://www.coingecko.com"},
+
+    "telegram web": {"type": "website", "url": "https://web.telegram.org"},
+    "discord web": {"type": "website", "url": "https://discord.com/channels/@me"},
+
+    "stackoverflow review": {"type": "website", "url": "https://stackoverflow.com/review"},
+
+    "kubernetes": {"type": "website", "url": "https://kubernetes.io"},
+    "helm": {"type": "website", "url": "https://helm.sh"},
+    "prometheus": {"type": "website", "url": "https://prometheus.io"},
+    "grafana": {"type": "website", "url": "https://grafana.com"},
+
+    "tensorflow": {"type": "website", "url": "https://www.tensorflow.org"},
+    "pytorch": {"type": "website", "url": "https://pytorch.org"},
+    "scikit": {"type": "website", "url": "https://scikit-learn.org"},
+
+    "jupyter": {"type": "website", "url": "https://jupyter.org"},
+    "anaconda": {"type": "website", "url": "https://www.anaconda.com"},
+
+    "python": {"type": "website", "url": "https://www.python.org"},
+    "node": {"type": "website", "url": "https://nodejs.org"},
+    "go": {"type": "website", "url": "https://go.dev"},
+    "rust": {"type": "website", "url": "https://www.rust-lang.org"},
+    "java": {"type": "website", "url": "https://www.oracle.com/java"},
+
+    "microsoft docs": {"type": "website", "url": "https://learn.microsoft.com"},
+    "apple dev": {"type": "website", "url": "https://developer.apple.com"},
+    "android dev": {"type": "website", "url": "https://developer.android.com"},
+
+    "openweather": {"type": "website", "url": "https://openweathermap.org"},
+
+    "openai docs": {"type": "website", "url": "https://platform.openai.com/docs"},
+    "anthropic docs": {"type": "website", "url": "https://docs.anthropic.com"},
+
+    "meta": {"type": "website", "url": "https://about.meta.com"},
+    "alphabet": {"type": "website", "url": "https://abc.xyz"},
+    "nvidia": {"type": "website", "url": "https://www.nvidia.com"},
+    "amd": {"type": "website", "url": "https://www.amd.com"},
+
+    "oracle": {"type": "website", "url": "https://www.oracle.com"},
+    "ibm": {"type": "website", "url": "https://www.ibm.com"},
+
+    "stack overflow": {"type": "website", "url": "https://stackoverflow.com"},
+    "superuser": {"type": "website", "url": "https://superuser.com"},
+    "serverfault": {"type": "website", "url": "https://serverfault.com"}
+  }
+}
