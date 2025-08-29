@@ -3,8 +3,7 @@ const CACHE_NAME = 'voiceai-cache-v1';
 const CORE_ASSETS = [
   '/',
   '/manifest.webmanifest',
-  '/placeholder-logo.png',
-  '/placeholder.jpg'
+  '/placeholder-logo.png'
 ];
 
 self.addEventListener('install', (event) => {
