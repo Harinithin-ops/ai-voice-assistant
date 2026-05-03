@@ -109,13 +109,9 @@ export function SpeechRecognitionManager({
         recognitionRef.current.serviceURI = "wss://www.google.com/speech-api/v2/recognize"
       }
 
-      // Add grammar hints for common commands
+      // Grammar hints removed to allow free-form commands like app names
       if ("grammars" in recognitionRef.current) {
-        const grammar =
-          "#JSGF V1.0; grammar commands; public <command> = open | search | what is | who is | tell me | play | stop | pause | help | weather | time | date | calculator | notepad | browser | maps;"
-        const speechRecognitionList = new (window as any).SpeechGrammarList()
-        speechRecognitionList.addFromString(grammar, 1)
-        recognitionRef.current.grammars = speechRecognitionList
+        // We leave grammars empty to not constrain the recognizer
       }
 
       let speechTimeout: NodeJS.Timeout | null = null
@@ -149,8 +145,8 @@ export function SpeechRecognitionManager({
           const cleanTranscript = finalTranscript.trim()
           console.log("[v0] Speech recognized:", cleanTranscript, "Confidence:", maxConfidence)
 
-          const CONFIDENCE_THRESHOLD = 0.75
-          const MIN_CONFIDENCE_THRESHOLD = 0.6
+          const CONFIDENCE_THRESHOLD = 0.5
+          const MIN_CONFIDENCE_THRESHOLD = 0.3
 
           if (maxConfidence >= CONFIDENCE_THRESHOLD) {
             onTranscript(cleanTranscript, maxConfidence, "web-api")
@@ -444,7 +440,9 @@ export function SpeechRecognitionManager({
     const commonCommands = [
       'open notepad', 'notepad', 'open calculator', 'calculator',
       'open chrome', 'chrome', 'google chrome', 'browser',
-      'open maps', 'maps', 'google maps',
+      'open maps', 'maps', 'google maps', 'open youtube', 'youtube',
+      'open facebook', 'facebook', 'open instagram', 'instagram',
+      'open whatsapp', 'whatsapp', 'open spotify', 'spotify',
       'what time', 'time', 'current time',
       'weather', 'what weather', 'weather today',
       'hello', 'hi', 'help', 'thanks', 'thank you',

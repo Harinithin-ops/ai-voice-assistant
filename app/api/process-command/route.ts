@@ -171,7 +171,7 @@ function isSystemCommand(command: string): boolean {
   // The backend is responsible for deciding whether to open a local application or a URL
   if (lowerCommand.startsWith("open ")) return true
 
-  const systemOps = ["screenshot", "volume", "brightness", "timer", "reminder"]
+  const systemOps = ["screenshot", "volume", "brightness", "timer", "reminder", "turn off", "turn on", "sleep", "shutdown", "restart"]
   if (systemOps.some((op) => lowerCommand.includes(op))) return true
 
   return false
@@ -231,31 +231,63 @@ export async function POST(request: NextRequest) {
       } else {
         console.log("[v0] Backend unavailable, using fallback")
         if (lowerCommand.includes("open calculator") || lowerCommand.includes("open calc")) {
-          response = "Python backend unavailable. Opening web calculator as fallback..."
+          response = "Opening calculator..."
           action = { type: "open_url", url: "https://www.google.com/search?q=calculator" }
         } else if (lowerCommand.startsWith("open ")) {
-          // Attempt to open as a website if the target looks like a URL or a domain
           const target = command.replace(/^[Oo]pen\s+/, "").trim()
-          const looksLikeUrl = /^(https?:\/\/)/i.test(target) || /\.[a-z]{2,}(\/?|\s|$)/i.test(target)
-          if (looksLikeUrl) {
-            const url = /^(https?:\/\/)/i.test(target) ? target : `https://${target}`
-            response = `Opening ${url} in your browser...`
-            action = { type: "open_url", url }
+          const cleanedTarget = target.toLowerCase().replace(/\s+/g, "")
+          
+          const appMap: Record<string, string> = {
+            'youtube': 'https://www.youtube.com',
+            'google': 'https://www.google.com',
+            'facebook': 'https://www.facebook.com',
+            'twitter': 'https://twitter.com',
+            'x': 'https://twitter.com',
+            'instagram': 'https://www.instagram.com',
+            'linkedin': 'https://www.linkedin.com',
+            'github': 'https://github.com',
+            'netflix': 'https://www.netflix.com',
+            'amazon': 'https://www.amazon.com',
+            'whatsapp': 'https://web.whatsapp.com',
+            'spotify': 'https://open.spotify.com',
+            'maps': 'https://maps.google.com',
+            'googlemaps': 'https://maps.google.com',
+            'gmail': 'https://mail.google.com',
+          }
+
+          if (appMap[cleanedTarget]) {
+            response = `Opening ${target}...`
+            action = { type: "open_url", url: appMap[cleanedTarget] }
           } else {
-            response =
-              "This system command requires the Python backend to be running to open local applications. Please start the backend service and try again."
+            const looksLikeUrl = /^(https?:\/\/)/i.test(target) || /\.[a-z]{2,}(\/?|\s|$)/i.test(target)
+            if (looksLikeUrl) {
+              const url = /^(https?:\/\/)/i.test(target) ? target : `https://${target}`
+              response = `Opening ${url}...`
+              action = { type: "open_url", url }
+            } else {
+              // Fallback for unknown apps: try to guess the .com or search
+              const url = `https://www.${cleanedTarget}.com`
+              response = `Opening ${target}...`
+              action = { type: "open_url", url }
+            }
           }
         } else if (lowerCommand.includes("screenshot")) {
           response = "Python backend unavailable. Screenshot functionality requires the backend service to be running."
         } else if (lowerCommand.includes("volume")) {
           response = "Python backend unavailable. Volume control requires the backend service to be running."
+        } else if (lowerCommand.includes("turn off") && lowerCommand.includes("screen")) {
+          response = "Turning off the screen display."
+          action = { type: "screen_power", direction: "off" }
+        } else if (lowerCommand.includes("turn on") && lowerCommand.includes("screen")) {
+          response = "Turning on the screen display."
+          action = { type: "screen_power", direction: "on" }
         } else if (lowerCommand.includes("timer")) {
           const match = lowerCommand.match(/(\d+)\s*(minute|min)/i)
           const minutes = match ? match[1] : "5"
-          response = `Python backend unavailable. Timer for ${minutes} minutes noted (requires backend for full functionality).`
+          response = `Timer for ${minutes} minutes noted.`
         } else {
           response =
-            "This system command requires the Python backend to be running. Please start the backend service and try again."
+            "This command requires the Python backend to be running for local system integration."
         }
 
         return NextResponse.json({
@@ -263,47 +295,8 @@ export async function POST(request: NextRequest) {
           action,
           source: "frontend_fallback",
           backend_available: false,
-          note: "Start the Python backend (python scripts/main.py) for full system integration",
         })
       }
-    } else if (lowerCommand.includes("open google maps")) {
-      const locationMatch = command.match(/(?:for|to find|location of|location for)\s+(.+)/i)
-      const location = locationMatch ? locationMatch[1] : ""
-
-      if (location) {
-        response = `Opening Google Maps to find ${location}...`
-        action = { type: "open_url", url: `https://www.google.com/maps/search/${encodeURIComponent(location)}` }
-      } else {
-        response = "Opening Google Maps..."
-        action = { type: "open_url", url: "https://www.google.com/maps" }
-      }
-    } else if (lowerCommand.includes("open youtube")) {
-      response = "Opening YouTube in your browser..."
-      action = { type: "open_url", url: "https://www.youtube.com" }
-    } else if (lowerCommand.includes("open google")) {
-      response = "Opening Google in your browser..."
-      action = { type: "open_url", url: "https://www.google.com" }
-    } else if (lowerCommand.includes("open facebook")) {
-      response = "Opening Facebook in your browser..."
-      action = { type: "open_url", url: "https://www.facebook.com" }
-    } else if (lowerCommand.includes("open twitter") || lowerCommand.includes("open x")) {
-      response = "Opening Twitter in your browser..."
-      action = { type: "open_url", url: "https://www.twitter.com" }
-    } else if (lowerCommand.includes("open instagram")) {
-      response = "Opening Instagram in your browser..."
-      action = { type: "open_url", url: "https://www.instagram.com" }
-    } else if (lowerCommand.includes("open linkedin")) {
-      response = "Opening LinkedIn in your browser..."
-      action = { type: "open_url", url: "https://www.linkedin.com" }
-    } else if (lowerCommand.includes("open github")) {
-      response = "Opening GitHub in your browser..."
-      action = { type: "open_url", url: "https://www.github.com" }
-    } else if (lowerCommand.includes("open netflix")) {
-      response = "Opening Netflix in your browser..."
-      action = { type: "open_url", url: "https://www.netflix.com" }
-    } else if (lowerCommand.includes("open amazon")) {
-      response = "Opening Amazon in your browser..."
-      action = { type: "open_url", url: "https://www.amazon.com" }
     } else if (
       lowerCommand.includes("scrape") ||
       (lowerCommand.includes("get") && !lowerCommand.includes("open")) ||

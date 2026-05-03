@@ -43,7 +43,8 @@ class NaturalLanguageProcessor:
                 (r"(?:set\s+)?volume\s+(?:to\s+)?(\d+)(?:%|percent)?", "set_volume"),
                 (r"(?:turn\s+)?brightness\s+(up|down)", "brightness_control"),
                 (r"(?:set\s+)?brightness\s+(?:to\s+)?(\d+)(?:%|percent)?", "set_brightness"),
-                (r"(?:lock|sleep|shutdown|restart)\s+(?:the\s+)?(?:computer|system|pc)", "system_power"),
+                (r"turn\s+(off|on)(?:\s+(?:the\s+)?screen)?$", "screen_power"),
+                (r"(?:lock|sleep|shutdown|restart|turn\s+off)\s+(?:the\s+)?(?:computer|system|pc|laptop)", "system_power"),
             ],
             CommandCategory.TIMER_REMINDER: [
                 (r"(?:set\s+(?:a\s+)?)?timer\s+(?:for\s+)?(\d+)\s*(minute|min|second|sec|hour)s?", "set_timer"),
@@ -366,6 +367,24 @@ class AdvancedCommandProcessor:
                 'response': f"Setting volume to {level}%",
                 'action_taken': 'set_volume',
                 'data': {'level': int(level)}
+            }
+        elif intent.action == "screen_power":
+            direction = intent.entities.get('param_1', ['off'])[0]
+            return {
+                'success': True,
+                'response': f"Turning screen {direction}",
+                'action_taken': 'screen_power',
+                'data': {'direction': direction}
+            }
+        elif intent.action == "system_power":
+            power_action = intent.entities.get('param_1', ['sleep'])[0]
+            if power_action.replace(" ", "") == "turnoff":
+                power_action = "sleep"
+            return {
+                'success': True,
+                'response': f"Initiating system {power_action}",
+                'action_taken': 'system_power',
+                'data': {'action': power_action}
             }
         
         return {'success': False, 'response': "Unknown system control command."}

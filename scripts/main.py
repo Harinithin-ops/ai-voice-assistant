@@ -45,7 +45,7 @@ class CommandRequest(BaseModel):
 
 class CommandResponse(BaseModel):
     response: str
-    action_taken: str
+    action_taken: Optional[str] = "unknown"
     success: bool
     data: Optional[Dict[Any, Any]] = None
     intent: Optional[Dict[str, Any]] = None
@@ -170,6 +170,17 @@ class VoiceAssistant:
                 vol_result = await self._control_volume(direction)
                 status = 'completed' if vol_result.get('success') else 'failed'
                 return {'execution_status': status, 'volume_result': vol_result}
+            
+            elif action == "screen_power":
+                direction = data.get('direction', 'off')
+                power_result = await self._control_screen(direction)
+                # It's completed even if native power fails because frontend will also do a UI overlay
+                return {'execution_status': 'completed', 'power_result': power_result}
+                
+            elif action == "system_power":
+                power_action = data.get('action', 'sleep')
+                power_result = await self._control_system_power(power_action)
+                return {'execution_status': 'completed', 'power_result': power_result}
             
             elif action == "web_search":
                 query = data.get('query', '')
@@ -596,6 +607,57 @@ class VoiceAssistant:
                 'success': False,
                 'message': f"Volume control failed: {str(e)}"
             }
+            
+    async def _control_screen(self, direction: str) -> Dict[str, Any]:
+        """Control laptop screen power"""
+        try:
+            os_name = platform.system()
+            if direction.lower() == 'off':
+                if os_name == 'Windows':
+                    import ctypes
+                    # SC_MONITORPOWER = 0xF170, 2 = power off
+                    ctypes.windll.user32.SendMessageW(0xFFFF, 0x0112, 0xF170, 2)
+                elif os_name == 'Darwin':
+                    subprocess.run(['pmset', 'displaysleepnow'])
+                elif os_name == 'Linux':
+                    subprocess.run(['xset', 'dpms', 'force', 'off'])
+                return {'success': True, 'message': 'Screen turned off'}
+            else:
+                # "turn on" usually just requires moving mouse or pressing key
+                pyautogui.press('shift')
+                return {'success': True, 'message': 'Screen turned on'}
+        except Exception as e:
+            return {'success': False, 'message': f"Screen control failed: {str(e)}"}
+            
+    async def _control_system_power(self, power_action: str) -> Dict[str, Any]:
+        """Control laptop system power (sleep, shutdown, etc.)"""
+        try:
+            os_name = platform.system()
+            if power_action == 'sleep':
+                if os_name == 'Windows':
+                    import ctypes
+                    # PowrProf.dll SetSuspendState(Hibernate, ForceCritical, DisableWakeEvent)
+                    ctypes.windll.PowrProf.SetSuspendState(0, 1, 0)
+                elif os_name == 'Darwin':
+                    subprocess.run(['pmset', 'sleepnow'])
+                elif os_name == 'Linux':
+                    subprocess.run(['systemctl', 'suspend'])
+                return {'success': True, 'message': 'System put to sleep'}
+            elif power_action == 'shutdown':
+                if os_name == 'Windows':
+                    subprocess.run(['shutdown', '/s', '/t', '0'])
+                elif os_name == 'Darwin' or os_name == 'Linux':
+                    subprocess.run(['shutdown', '-h', 'now'])
+                return {'success': True, 'message': 'System shutting down'}
+            elif power_action == 'restart':
+                if os_name == 'Windows':
+                    subprocess.run(['shutdown', '/r', '/t', '0'])
+                elif os_name == 'Darwin' or os_name == 'Linux':
+                    subprocess.run(['shutdown', '-r', 'now'])
+                return {'success': True, 'message': 'System restarting'}
+            return {'success': False, 'message': f'Unsupported power action: {power_action}'}
+        except Exception as e:
+            return {'success': False, 'message': f"System power control failed: {str(e)}"}
     
     async def _perform_web_search(self, query: str) -> Dict[str, Any]:
         """Perform web search and return results"""

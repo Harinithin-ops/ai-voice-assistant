@@ -18,12 +18,22 @@ import {
   Clock
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SettingsModal, SettingsTab } from '@/components/settings-modal';
 
 export function UserProfileDropdown() {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const auth = getFirebaseAuth();
+
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [activeSettingsTab, setActiveSettingsTab] = useState<SettingsTab>('profile');
+
+  const openSettings = (tab: SettingsTab) => {
+    setActiveSettingsTab(tab);
+    setIsSettingsOpen(true);
+    setIsOpen(false);
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -150,7 +160,7 @@ export function UserProfileDropdown() {
                     <Button
                       variant="ghost"
                       className="w-full justify-start h-auto p-3 hover:bg-white/10 rounded-lg transition-all duration-200"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => openSettings('profile')}
                     >
                       <User className="h-4 w-4 mr-3 text-white/70" />
                       <div className="flex flex-col items-start">
@@ -162,7 +172,7 @@ export function UserProfileDropdown() {
                     <Button
                       variant="ghost"
                       className="w-full justify-start h-auto p-3 hover:bg-white/10 rounded-lg transition-all duration-200"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => openSettings('email')}
                     >
                       <Mail className="h-4 w-4 mr-3 text-white/70" />
                       <div className="flex flex-col items-start">
@@ -174,7 +184,7 @@ export function UserProfileDropdown() {
                     <Button
                       variant="ghost"
                       className="w-full justify-start h-auto p-3 hover:bg-white/10 rounded-lg transition-all duration-200"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => openSettings('privacy')}
                     >
                       <Shield className="h-4 w-4 mr-3 text-white/70" />
                       <div className="flex flex-col items-start">
@@ -186,7 +196,7 @@ export function UserProfileDropdown() {
                     <Button
                       variant="ghost"
                       className="w-full justify-start h-auto p-3 hover:bg-white/10 rounded-lg transition-all duration-200"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => openSettings('app')}
                     >
                       <Settings className="h-4 w-4 mr-3 text-white/70" />
                       <div className="flex flex-col items-start">
@@ -218,6 +228,12 @@ export function UserProfileDropdown() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+        defaultTab={activeSettingsTab} 
+      />
     </div>
   );
 }

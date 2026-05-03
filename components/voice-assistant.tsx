@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Brain, FileText, Home, Mic, MicOff, Settings, Sparkles, Square, Play, Check, X } from "lucide-react"
+import { Brain, FileText, Home, Mic, MicOff, Settings, Sparkles, Square, Play, Check, X, Phone, Video, Camera, Image as ImageIcon } from "lucide-react"
 import { VoiceVisualizer } from "@/components/voice-visualizer"
 import { CommandHistory } from "@/components/command-history"
 import { SpeechRecognitionManager } from "@/components/speech-recognition-manager"
@@ -42,6 +42,8 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
   const [commands, setCommands] = useState<Command[]>([])
   const [audioLevel, setAudioLevel] = useState(0)
   const [useGeminiAPI, setUseGeminiAPI] = useState(false)
+  const [wakeWordEnabled, setWakeWordEnabled] = useState(true)
+  const [isScreenOff, setIsScreenOff] = useState(false)
   const [currentTranscript, setCurrentTranscript] = useState("")
   const [pendingConfirmation, setPendingConfirmation] = useState<{
     transcript: string
@@ -54,6 +56,7 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
     stop,
     isSpeaking,
     settings: ttsSettings,
+    setSettings: setTTSSettings,
   } = useTextToSpeech({
     enabled: true,
     autoSpeak: true,
@@ -88,6 +91,15 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
       if (data.action && data.action.type === "open_url") {
         console.log("[v0] Opening URL:", data.action.url)
         window.open(data.action.url, "_blank", "noopener,noreferrer")
+      }
+      
+      // Handle screen power actions (especially for mobile simulation)
+      if (data.action && data.action.type === "screen_power") {
+        if (data.action.direction === "off") {
+          setIsScreenOff(true)
+        } else {
+          setIsScreenOff(false)
+        }
       }
 
       const updatedCommand: Command = {
@@ -164,6 +176,76 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
     }
   }
 
+  // Wake Word Detector
+  useEffect(() => {
+    if (!wakeWordEnabled || isListening || isSpeaking) return
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) return
+
+    const wakeWordRecognition = new SpeechRecognition()
+    wakeWordRecognition.continuous = true
+    wakeWordRecognition.interimResults = true
+    wakeWordRecognition.lang = "en-US"
+
+    let isStopped = false
+
+    wakeWordRecognition.onresult = (event: any) => {
+      if (isStopped) return
+      let transcript = ""
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript
+      }
+      
+      const lowerTranscript = transcript.toLowerCase()
+      if (
+        lowerTranscript.includes("hey assistant") || 
+        lowerTranscript.includes("hi assistant") || 
+        lowerTranscript.includes("hello assistant") ||
+        lowerTranscript.includes("ok assistant") ||
+        lowerTranscript.includes("okay assistant")
+      ) {
+        console.log("[v0] Wake word detected!")
+        isStopped = true
+        wakeWordRecognition.stop()
+        
+        setIsScreenOff(false) // Wake up screen if it was off
+        setIsListening(true)
+        if (ttsSettings.enabled && ttsSettings.autoSpeak) {
+           speak("Yes?")
+        }
+      }
+    }
+
+    wakeWordRecognition.onerror = (event: any) => {
+      // Ignore background errors, but restart if it's a typical timeout
+      if (event.error === "no-speech" || event.error === "network") {
+         // It will auto-restart via onend
+      }
+    }
+
+    wakeWordRecognition.onend = () => {
+      if (!isStopped && !isListening && !isSpeaking && wakeWordEnabled) {
+        try {
+          wakeWordRecognition.start()
+        } catch (e) {}
+      }
+    }
+
+    try {
+      wakeWordRecognition.start()
+    } catch (e) {
+      console.error("[v0] Wake word recognition start error", e)
+    }
+
+    return () => {
+      isStopped = true
+      try {
+        wakeWordRecognition.stop()
+      } catch (e) {}
+    }
+  }, [isListening, isSpeaking, wakeWordEnabled, ttsSettings.enabled, ttsSettings.autoSpeak, speak])
+
   // Pause mic while TTS is speaking to avoid feedback; resume if it was previously on
   useEffect(() => {
     if (isSpeaking) {
@@ -199,6 +281,15 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950">
+      {isScreenOff && (
+        <div 
+          className="fixed inset-0 bg-black z-[99999] flex items-center justify-center cursor-pointer"
+          onClick={() => setIsScreenOff(false)}
+        >
+          <div className="text-gray-900 text-xs opacity-50">Tap anywhere or say "turn on screen" to wake</div>
+        </div>
+      )}
+
       <SpeechRecognitionManager
         onTranscript={handleTranscript}
         onError={handleError}
@@ -232,9 +323,9 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8 max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl pb-24 md:pb-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
             AI Voice Assistant
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
@@ -243,7 +334,7 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12">
           <Button
             variant="outline"
             onClick={() => setShowAIFeatures(!showAIFeatures)}
@@ -280,45 +371,81 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
 
 
                   <div className="space-y-6">
-                    <Button
-                      onClick={toggleListening}
-                      size="lg"
-                      className={`w-24 h-24 rounded-full text-lg font-semibold transition-all duration-300 shadow-lg ${
-                        isListening
-                          ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse shadow-red-500/30"
-                          : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-green-500/30 animate-glow"
-                      }`}
-                    >
-                      {isListening ? <MicOff className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
-                    </Button>
+                    <div className="flex flex-col items-center justify-center relative py-2">
+                      {/* Unified Control Dock */}
+                      <div className="flex items-center justify-center gap-4 sm:gap-8 glass-effect px-6 py-4 rounded-[3rem] border border-gray-700/50 shadow-2xl bg-gray-900/60 backdrop-blur-xl">
+                        
+                        {/* Play/Stop Toggle */}
+                        <div className="w-14 h-14 flex items-center justify-center">
+                          {!isSpeaking && commands.length > 0 && commands[0].response ? (
+                            <Button
+                              onClick={() => speak(commands[0].response)}
+                              size="icon"
+                              variant="ghost"
+                              className="w-12 h-12 rounded-full text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 transition-all duration-300 ring-1 ring-emerald-500/30"
+                              title="Play last response"
+                            >
+                              <Play className="w-6 h-6 ml-1 fill-current" />
+                            </Button>
+                          ) : isSpeaking ? (
+                            <Button
+                              onClick={stop}
+                              size="icon"
+                              variant="ghost"
+                              className="w-12 h-12 rounded-full text-orange-400 hover:text-orange-300 hover:bg-orange-500/20 transition-all duration-300 animate-pulse ring-1 ring-orange-500/30"
+                              title="Stop speaking"
+                            >
+                              <Square className="w-5 h-5 fill-current" />
+                            </Button>
+                          ) : (
+                            <div className="w-12 h-12 rounded-full opacity-30 flex items-center justify-center text-gray-500 ring-1 ring-gray-700">
+                              <Play className="w-6 h-6 ml-1" />
+                            </div>
+                          )}
+                        </div>
 
-                    {(isSpeaking || (commands.length > 0 && commands[0].response)) && (
-                      <div className="flex items-center justify-center gap-4">
-                        {!isSpeaking && commands.length > 0 && commands[0].response && (
+                        {/* Main Microphone Button */}
+                        <div className="relative">
+                          {/* Outer glow rings when listening */}
+                          {isListening && (
+                            <>
+                              <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping" style={{ animationDuration: '3s' }}></div>
+                              <div className="absolute inset-[-10px] rounded-full border border-red-500/30 animate-pulse" style={{ animationDuration: '2s' }}></div>
+                            </>
+                          )}
                           <Button
-                            onClick={() => speak(commands[0].response)}
+                            onClick={toggleListening}
                             size="lg"
-                            variant="outline"
-                            className="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-2 border-green-400 text-white shadow-lg shadow-green-500/30 transition-all duration-300"
-                            title="Start reading the last response"
+                            className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full text-lg font-semibold transition-all duration-500 shadow-xl border-4 z-10 ${
+                              isListening
+                                ? "bg-gradient-to-br from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 border-red-400/40 shadow-red-500/50 scale-105"
+                                : "bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 border-green-400/30 shadow-green-500/40 hover:scale-105 hover:shadow-green-500/60"
+                            }`}
                           >
-                            <Play className="w-5 h-5" />
+                            {isListening ? (
+                              <MicOff className="w-8 h-8 sm:w-10 sm:h-10 text-white drop-shadow-md" />
+                            ) : (
+                              <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-white drop-shadow-md" />
+                            )}
                           </Button>
-                        )}
+                        </div>
 
-                        {isSpeaking && (
-                          <Button
-                            onClick={stop}
-                            size="lg"
-                            variant="outline"
-                            className="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-2 border-orange-400 text-white shadow-lg shadow-orange-500/30 transition-all duration-300 animate-pulse"
-                            title="Stop reading"
-                          >
-                            <Square className="w-5 h-5" />
-                          </Button>
-                        )}
+                        {/* Clear History Placeholder (Symmetry) */}
+                        <div className="w-14 h-14 flex items-center justify-center">
+                           <Button
+                             onClick={() => setCommands([])}
+                             size="icon"
+                             variant="ghost"
+                             className={`w-12 h-12 rounded-full transition-all duration-300 ring-1 ${commands.length > 0 ? "text-gray-400 hover:text-red-400 hover:bg-red-500/20 ring-gray-600 hover:ring-red-500/40" : "text-gray-700 ring-gray-800 cursor-not-allowed"}`}
+                             title="Clear conversation"
+                             disabled={commands.length === 0}
+                           >
+                             <X className="w-6 h-6" />
+                           </Button>
+                        </div>
+
                       </div>
-                    )}
+                    </div>
 
                     <div className="space-y-3">
                       <p className="text-xl font-semibold text-white">
@@ -335,6 +462,12 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
                               ? "Click play to hear the last response or microphone for new command"
                               : "Click the microphone to start"}
                       </p>
+                      
+                      {!isListening && wakeWordEnabled && !isSpeaking && (
+                        <div className="inline-block px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-medium animate-pulse">
+                          Say "Hey Assistant" to wake me up
+                        </div>
+                      )}
 
                       {currentTranscript && (
                         <div className="glass-effect rounded-lg p-4 max-w-md mx-auto border border-green-500/20">
@@ -344,7 +477,7 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
                       )}
                     </div>
 
-                    <div className="flex items-center justify-center">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                       <label className="flex items-center gap-3 cursor-pointer glass-effect rounded-full px-4 py-2 hover:bg-white/5 transition-colors border border-gray-700/50">
                         <input
                           type="checkbox"
@@ -353,6 +486,15 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
                           className="rounded accent-green-500"
                         />
                         <span className="text-sm font-medium text-gray-300">Enhanced AI Recognition</span>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer glass-effect rounded-full px-4 py-2 hover:bg-white/5 transition-colors border border-gray-700/50">
+                        <input
+                          type="checkbox"
+                          checked={wakeWordEnabled}
+                          onChange={(e) => setWakeWordEnabled(e.target.checked)}
+                          className="rounded accent-blue-500"
+                        />
+                        <span className="text-sm font-medium text-gray-300">Wake Word</span>
                       </label>
                     </div>
                   </div>
@@ -371,11 +513,90 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
         </div>
       </div>
 
+      {/* Mobile Bottom Navigation Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gray-950/90 backdrop-blur-lg border-t border-gray-800/50 md:hidden z-50 px-2 py-3 flex justify-between items-center shadow-2xl shadow-green-500/10">
+        <Button
+          variant="ghost"
+          className="flex flex-col items-center gap-1 text-gray-400 hover:text-green-400 hover:bg-green-500/10 h-auto py-2 flex-1"
+          onClick={() => {
+            if (ttsSettings.enabled) speak("Opening phone dialer.")
+            window.location.href = "tel:"
+          }}
+        >
+          <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="text-[10px] sm:text-xs font-medium">Call</span>
+        </Button>
+        <Button
+          variant="ghost"
+          className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 h-auto py-2 flex-1"
+          onClick={async () => {
+            if (ttsSettings.enabled) speak("Requesting video permission.")
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+              stream.getTracks().forEach(track => track.stop()) // Stop immediately, just wanted permission
+              alert("Video and audio permissions granted!")
+            } catch (err) {
+              alert("Permission denied or device unavailable.")
+            }
+          }}
+        >
+          <Video className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="text-[10px] sm:text-xs font-medium">Video</span>
+        </Button>
+        
+        {/* Central Mic Button for Mobile */}
+        <div className="relative -top-6 flex-1 flex justify-center">
+          <Button
+            onClick={toggleListening}
+            size="lg"
+            className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-semibold transition-all duration-300 shadow-xl border-4 border-gray-950 ${
+              isListening
+                ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse shadow-red-500/40"
+                : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-green-500/40 animate-glow"
+            }`}
+          >
+            {isListening ? <MicOff className="w-6 h-6 text-white" /> : <Mic className="w-6 h-6 text-white" />}
+          </Button>
+        </div>
+
+        <Button
+          variant="ghost"
+          className="flex flex-col items-center gap-1 text-gray-400 hover:text-purple-400 hover:bg-purple-500/10 h-auto py-2 flex-1"
+          onClick={() => {
+            if (ttsSettings.enabled) speak("Opening camera.")
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'image/*,video/*'
+            input.capture = 'environment'
+            input.click()
+          }}
+        >
+          <Camera className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="text-[10px] sm:text-xs font-medium">Camera</span>
+        </Button>
+        <Button
+          variant="ghost"
+          className="flex flex-col items-center gap-1 text-gray-400 hover:text-orange-400 hover:bg-orange-500/10 h-auto py-2 flex-1"
+          onClick={() => {
+            if (ttsSettings.enabled) speak("Opening image gallery.")
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = 'image/*'
+            input.click()
+          }}
+        >
+          <ImageIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="text-[10px] sm:text-xs font-medium">Image</span>
+        </Button>
+      </div>
+
       <AIFeaturesPanel isVisible={showAIFeatures} onToggle={() => setShowAIFeatures(!showAIFeatures)} />
       <AccessibilityPanel isVisible={showAccessibility} onToggle={() => setShowAccessibility(!showAccessibility)} />
       <TextToSpeechManager
         isVisible={showTTSSettings}
         onToggle={() => setShowTTSSettings(!showTTSSettings)}
+        initialSettings={ttsSettings}
+        onSettingsChange={setTTSSettings}
       />
     </div>
   )

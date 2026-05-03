@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "concurrently -k -n backend,frontend -c blue,green \"npm:dev:backend\" \"npm:dev:frontend\"",
     "dev:frontend": "next dev",
-    "dev:backend": "python scripts/main.py",
+    "dev:backend": ".\\.venv\\Scripts\\python.exe scripts/main.py",
     "lint": "next lint",
     "start": "next start"
   },
