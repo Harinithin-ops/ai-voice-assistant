@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Manrope } from "next/font/google"
 import "./globals.css"
 import SWRegister from "@/components/pwa/sw-register"
@@ -16,12 +16,15 @@ const manrope = Manrope({
   variable: "--font-manrope",
 })
 
+export const viewport: Viewport = {
+  themeColor: "#0ea5e9",
+}
+
 export const metadata: Metadata = {
   title: "VoiceAI Pro - The Future of Voice Interaction",
   description:
     "Experience the next generation of AI-powered voice assistance with advanced speech recognition, intelligent web integration, and accessibility-first design.",
   generator: "v0.app",
-  themeColor: "#0ea5e9",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
