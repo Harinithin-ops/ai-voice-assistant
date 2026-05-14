@@ -37,8 +37,8 @@ export function SpeechRecognitionManager({
     browserName: string
     isRecommended: boolean
   }>({ hasWebSpeech: false, hasMediaRecorder: false, browserName: "Unknown", isRecommended: false })
-  const restartTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const networkRetryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const restartTimeoutRef = useRef<any>(null)
+  const networkRetryTimeoutRef = useRef<any>(null)
 
   const detectBrowser = () => {
     const userAgent = navigator.userAgent.toLowerCase()
@@ -104,17 +104,14 @@ export function SpeechRecognitionManager({
         recognitionRef.current.echoCancellation = true
       }
 
-      if ("serviceURI" in recognitionRef.current) {
-        // Use Google's speech service explicitly for better reliability
-        recognitionRef.current.serviceURI = "wss://www.google.com/speech-api/v2/recognize"
-      }
+      // We rely on the browser's default serviceURI
 
       // Grammar hints removed to allow free-form commands like app names
       if ("grammars" in recognitionRef.current) {
         // We leave grammars empty to not constrain the recognizer
       }
 
-      let speechTimeout: NodeJS.Timeout | null = null
+      let speechTimeout: any = null
       let lastInterimTranscript = ""
       let lastInterimTime = 0
 
@@ -215,7 +212,7 @@ export function SpeechRecognitionManager({
         }
 
         if (event.error === "network") {
-          console.error("[v0] Network error in speech recognition")
+          console.warn("[v0] Network error in speech recognition")
           setNetworkRetryCount((prev) => prev + 1)
 
           if (networkRetryCount < 3) {
@@ -243,14 +240,14 @@ export function SpeechRecognitionManager({
               ? "Network connection issue. Please check your internet connection and try again."
               : `Speech recognition network error in ${compatibility.browserName}. Try using Chrome or Safari for better reliability.`
 
-            console.error("[v0] Max network retries reached, suggesting fallback")
+            console.warn("[v0] Max network retries reached, suggesting fallback")
             onError(errorMessage)
             handleFallbackToMediaRecorder()
             return
           }
         }
 
-        console.error("[v0] Actual speech recognition error:", event.error)
+        console.warn("[v0] Actual speech recognition error:", event.error)
         setIsActive(false)
         setIsStarting(false)
 
@@ -363,7 +360,7 @@ export function SpeechRecognitionManager({
         console.log("[v0] MediaRecorder fallback started")
       }
     } catch (error) {
-      console.error("[v0] MediaRecorder fallback failed:", error)
+      console.warn("[v0] MediaRecorder fallback failed:", error)
       onError("Unable to access microphone. Please check permissions.")
     }
   }
@@ -386,7 +383,7 @@ export function SpeechRecognitionManager({
               setIsStarting(true)
               recognitionRef.current.start()
             } catch (error: any) {
-              console.error("[v0] Error starting recognition:", error)
+              console.warn("[v0] Error starting recognition:", error)
               setIsStarting(false)
               if (error.message && error.message.includes("already started")) {
                 console.log("[v0] Recognition already active, setting state accordingly")
@@ -405,7 +402,7 @@ export function SpeechRecognitionManager({
         setIsStarting(true)
         recognitionRef.current.start()
       } catch (error: any) {
-        console.error("[v0] Error starting recognition:", error)
+        console.warn("[v0] Error starting recognition:", error)
         setIsStarting(false)
         if (error.message && error.message.includes("already started")) {
           console.log("[v0] Recognition already active, setting state accordingly")
@@ -427,7 +424,7 @@ export function SpeechRecognitionManager({
           mediaRecorderRef.current.stop()
         }
       } catch (error) {
-        console.error("[v0] Error stopping recognition:", error)
+        console.warn("[v0] Error stopping recognition:", error)
         setIsActive(false)
         setIsStarting(false)
       }

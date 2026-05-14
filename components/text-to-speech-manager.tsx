@@ -65,20 +65,7 @@ export function TextToSpeechManager({ onSettingsChange, initialSettings, isVisib
       loadVoices()
       speechSynthesis.onvoiceschanged = loadVoices
 
-      // Monitor speech synthesis state
-      const checkSpeakingState = () => {
-        setIsSpeaking(speechSynthesis.speaking)
-        setIsPaused(speechSynthesis.paused)
-
-        if (speechSynthesis.speaking || speechSynthesis.paused) {
-          requestAnimationFrame(checkSpeakingState)
-        }
-      }
-
-      const interval = setInterval(checkSpeakingState, 100)
-
       return () => {
-        clearInterval(interval)
         speechSynthesis.cancel()
       }
     }

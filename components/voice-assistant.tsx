@@ -40,7 +40,6 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
   const [showTTSSettings, setShowTTSSettings] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [commands, setCommands] = useState<Command[]>([])
-  const [audioLevel, setAudioLevel] = useState(0)
   const [useGeminiAPI, setUseGeminiAPI] = useState(false)
   const [wakeWordEnabled, setWakeWordEnabled] = useState(true)
   const [isScreenOff, setIsScreenOff] = useState(false)
@@ -193,11 +192,12 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
     wakeWordRecognition.onresult = (event: any) => {
       if (isStopped) return
       let transcript = ""
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript + " "
       }
       
-      const lowerTranscript = transcript.toLowerCase()
+      const lowerTranscript = transcript.toLowerCase().replace(/[.,!?]/g, "")
+      console.log("[v0] Wake word transcript:", lowerTranscript)
       if (
         lowerTranscript.includes("hey assistant") || 
         lowerTranscript.includes("hi assistant") || 
@@ -218,17 +218,23 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
     }
 
     wakeWordRecognition.onerror = (event: any) => {
-      // Ignore background errors, but restart if it's a typical timeout
-      if (event.error === "no-speech" || event.error === "network") {
-         // It will auto-restart via onend
+      console.log("[v0] Wake word error:", event.error)
+      if (event.error === "not-allowed") {
+        isStopped = true
+        console.error("Microphone permission denied for wake word.")
       }
+      // It will auto-restart via onend for network and no-speech errors
     }
 
     wakeWordRecognition.onend = () => {
       if (!isStopped && !isListening && !isSpeaking && wakeWordEnabled) {
-        try {
-          wakeWordRecognition.start()
-        } catch (e) {}
+        setTimeout(() => {
+          if (!isStopped && !isListening && !isSpeaking && wakeWordEnabled) {
+            try {
+              wakeWordRecognition.start()
+            } catch (e) {}
+          }
+        }, 250)
       }
     }
 
@@ -265,19 +271,8 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
     }
   }, [isSpeaking])
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (isListening) {
-      interval = setInterval(() => {
-        setAudioLevel(Math.random() * 0.8 + 0.2)
-      }, 100)
-    } else {
-      setAudioLevel(0)
-    }
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [isListening])
+  // Removed the setInterval that was causing React state updates every 100ms.
+  // The audio visualizer is now fully self-contained using requestAnimationFrame and Canvas.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950">
@@ -367,7 +362,7 @@ export default function VoiceAssistant({ onBackToLanding }: VoiceAssistantProps)
             <Card className="glass-effect border-gray-700/50 shadow-xl hover:shadow-green-500/10 transition-all duration-300">
               <CardContent className="p-8">
                 <div className="text-center space-y-8">
-                  <VoiceVisualizer isActive={isListening} audioLevel={audioLevel} />
+                  <VoiceVisualizer isActive={isListening} />
 
 
                   <div className="space-y-6">

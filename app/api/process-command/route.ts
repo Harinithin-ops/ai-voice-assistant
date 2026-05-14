@@ -117,7 +117,8 @@ function determineContentType(command: string): string {
 
 async function checkBackendAvailability(): Promise<boolean> {
   try {
-    const response = await fetch("http://localhost:8002/api/health", {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:8002"
+    const response = await fetch(`${backendUrl}/api/health`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       signal: AbortSignal.timeout(2000),
@@ -131,7 +132,8 @@ async function checkBackendAvailability(): Promise<boolean> {
 
 async function delegateToBackend(command: string): Promise<{ response: string; action: any; success: boolean }> {
   try {
-    const response = await fetch("http://localhost:8002/api/process-command", {
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:8002"
+    const response = await fetch(`${backendUrl}/api/process-command`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

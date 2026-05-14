@@ -4,10 +4,9 @@ import { useEffect, useRef } from "react"
 
 interface VoiceVisualizerProps {
   isActive: boolean
-  audioLevel: number
 }
 
-export function VoiceVisualizer({ isActive, audioLevel }: VoiceVisualizerProps) {
+export function VoiceVisualizer({ isActive }: VoiceVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number>(0)
 
@@ -26,6 +25,12 @@ export function VoiceVisualizer({ isActive, audioLevel }: VoiceVisualizerProps) 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       if (isActive) {
+        // Generate random audio level for visual effect without triggering React re-renders
+        // Smooth out the random changes by interpolating
+        const targetAudioLevel = Math.random() * 0.8 + 0.2;
+        // The time-based math adds some natural variation
+        const audioLevel = targetAudioLevel * 0.5 + 0.5 * Math.abs(Math.sin(Date.now() * 0.005));
+        
         // Animated rings based on audio level
         const rings = 3
         const time = Date.now() * 0.005
@@ -72,7 +77,9 @@ export function VoiceVisualizer({ isActive, audioLevel }: VoiceVisualizerProps) 
         ctx.stroke()
       }
 
-      animationRef.current = requestAnimationFrame(animate)
+      if (isActive) {
+        animationRef.current = requestAnimationFrame(animate)
+      }
     }
 
     animate()
@@ -82,7 +89,7 @@ export function VoiceVisualizer({ isActive, audioLevel }: VoiceVisualizerProps) 
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [isActive, audioLevel])
+  }, [isActive])
 
   return (
     <div className="relative">

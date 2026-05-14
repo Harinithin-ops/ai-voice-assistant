@@ -2,9 +2,9 @@ import { type NextRequest, NextResponse } from "next/server"
 export const runtime = 'nodejs'
 
 // Use the previously provided constants
-const GOOGLE_API_KEY = "AIzaSyB2iZso1Z8qhKY-oDPSMXxrcWUT26SoKyo"
-const SEARCH_ENGINE_ID = "64d7c086abfef411d"
-const GEMINI_API_KEY = "AIzaSyB2iZso1Z8qhKY-oDPSMXxrcWUT26SoKyo"
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "AIzaSyB2iZso1Z8qhKY-oDPSMXxrcWUT26SoKyo"
+const SEARCH_ENGINE_ID = process.env.SEARCH_ENGINE_ID || "64d7c086abfef411d"
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyB2iZso1Z8qhKY-oDPSMXxrcWUT26SoKyo"
 
 interface SearchResult {
   title: string

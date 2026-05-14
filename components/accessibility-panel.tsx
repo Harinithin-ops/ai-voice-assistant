@@ -58,7 +58,7 @@ export default function AccessibilityPanel({ isVisible, onToggle }: Accessibilit
 
   const recognitionRef = useRef<any | null>(null)
   const answerRecognitionRef = useRef<any | null>(null)
-  const restartTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const restartTimeoutRef = useRef<any>(null)
 
   useEffect(() => {
     const words = documentContent
